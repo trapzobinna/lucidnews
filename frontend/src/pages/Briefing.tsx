@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiClient } from '../api/client';
 import ArticleCard from '../components/ArticleCard';
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
@@ -17,7 +17,7 @@ export default function Briefing() {
   
   const [pipelineState, setPipelineState] = useState<ProgressState | null>(null);
   const [pipelineConflict, setPipelineConflict] = useState(false);
-  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+  const pollingInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchBriefing = () => {
     setLoading(true);

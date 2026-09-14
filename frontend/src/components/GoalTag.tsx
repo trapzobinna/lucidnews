@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Target } from 'lucide-react';
 
 export default function GoalTag({ relevanceScore, matchType, matchedKeyword }: { relevanceScore: number, matchType?: string, matchedKeyword?: string }) {

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import CredibilityBadge from './CredibilityBadge';
 import GoalTag from './GoalTag';
 import { ExternalLink, Calendar } from 'lucide-react';
