@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+feedparser
+newspaper3k
+sentence-transformers
+anthropic
+apscheduler
+pytest
+pydantic
+pydantic-settings
+python-dotenv
+numpy
+lxml_html_clean

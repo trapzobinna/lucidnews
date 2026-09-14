@@ -1,0 +1,25 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Database & logs
+backend/lucid.db
+backend/logs/
+*.log
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
