@@ -1,20 +1,39 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import UserGoal
 from app.schemas import UserGoalCreate, UserGoalResponse
-from sentence_transformers import SentenceTransformer
-import numpy as np
 
 router = APIRouter()
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Lazy-loaded embedder — only initialized when a goal is created
+_embedder = None
+
+def get_embedder():
+    """Load the sentence-transformer model on first use.
+    Keeps the API lightweight when ML deps aren't installed."""
+    global _embedder
+    if _embedder is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+            _embedder = SentenceTransformer('all-MiniLM-L6-v2')
+        except ImportError as e:
+            raise HTTPException(
+                status_code=503,
+                detail="Embedding service unavailable on this instance. "
+                       "Run the ML pipeline separately to create goals."
+            ) from e
+    return _embedder
+
 
 @router.get("/", response_model=list[UserGoalResponse])
 def get_goals(db: Session = Depends(get_db)):
     return db.query(UserGoal).filter(UserGoal.user_id == 1).all()
 
+
 @router.post("/", response_model=UserGoalResponse)
 def create_goal(goal: UserGoalCreate, db: Session = Depends(get_db)):
+    embedder = get_embedder()
     emb = embedder.encode([goal.goal_text])[0]
     db_goal = UserGoal(
         user_id=1,
@@ -25,6 +44,7 @@ def create_goal(goal: UserGoalCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_goal)
     return db_goal
+
 
 @router.delete("/{goal_id}")
 def delete_goal(goal_id: int, db: Session = Depends(get_db)):
