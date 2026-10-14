@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import app.logging_config
 from app.database import engine, Base
+import app.models
 
 Base.metadata.create_all(bind=engine)
 
